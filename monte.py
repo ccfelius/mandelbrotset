@@ -17,14 +17,13 @@ def calculation(c, z = 0.0j, maxiter = 100):
             return True
     return False
 
-
 count = 0
 in_mandelbrot = 0
 
 while count < 1000000:
     # create random sample
-    y_sample = random.uniform(-1.5j, 1.5j)
-    x_sample = random.uniform(-2.5, 1.5)
+    y_sample = random.uniform(-1.1j, 1.1j)
+    x_sample = random.uniform(-2., .5)
     sample = x_sample + y_sample
 
     # check if in mandelbrotset
@@ -35,3 +34,4 @@ while count < 1000000:
 
 print(in_mandelbrot)
 print(in_mandelbrot / count * 3000)
+print(in_mandelbrot / count)
