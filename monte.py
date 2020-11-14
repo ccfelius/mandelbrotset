@@ -1,26 +1,37 @@
-#Monte carlo integration
-import math
+# imports
+import numpy as np
+import matplotlib.pyplot as plt
+import time
 import random
 
-# misschien beter om gewoon de code van main.py te linken
-def function(x):
-    z = 0.0j 
-    ....
-    return z * z + c
+
+maxiter = 100
+z = 0.0j
+step = 0.005
+
+def calculation(c, z = 0.0j, maxiter = 100):
+    maxiter = 100
+    for i in range(maxiter):
+        z = z * z + c
+        if np.sqrt((z.real * z.real) + (z.imag * z.imag)) <= 2:
+            return True
+    return False
+
 
 count = 0
-in_area = 0
+in_mandelbrot = 0
 
 while count < 1000000:
-    # ik had maar even in het figuur gekeken en dit waren ongeveer waarbinnen de mandelbrot zit
-    y_coord = random.uniform(-1.14935, 1.13149)
-    x_coord = random.uniform(-1.99655, 0.491665)
+    # create random sample
+    y_sample = random.uniform(-1.5j, 1.5j)
+    x_sample = random.uniform(-2.5, 1.5)
+    sample = x_sample + y_sample
 
-    # check if generated coordinate is in mandelbrot
-    if y_coord < function(x_coord):
-        in_area += 1
-        
+    # check if in mandelbrotset
+    if calculation(sample)==True:        
+        in_mandelbrot +=1
+
     count += 1
 
-    area_box = 9/ math.e
-    print(in_area/count)* area_box
+print(in_mandelbrot)
+print(in_mandelbrot / count * 3000)
