@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import time
 import random
 
-
 maxiter = 100
 z = 0.0j
 step = 0.005
@@ -13,14 +12,14 @@ def calculation(c, z = 0.0j, maxiter = 100):
     maxiter = 100
     for i in range(maxiter):
         z = z * z + c
-        if np.sqrt((z.real * z.real) + (z.imag * z.imag)) <= 2:
-            return True
-    return False
+        if np.sqrt((z.real * z.real) + (z.imag * z.imag)) >= 2:
+            return False
+    return True
 
 count = 0
 in_mandelbrot = 0
 
-while count < 1000000:
+while count < 1000:
     # create random sample
     y_sample = random.uniform(-1.1j, 1.1j)
     x_sample = random.uniform(-2., .5)
@@ -32,6 +31,5 @@ while count < 1000000:
 
     count += 1
 
-print(in_mandelbrot)
-print(in_mandelbrot / count * 3000)
-print(in_mandelbrot / count)
+
+print(in_mandelbrot/count * (2.2*2.5))
