@@ -4,17 +4,6 @@ import matplotlib.pyplot as plt
 import time
 import random
 
-maxiter = 1000
-z = 0.0j
-step = 0.005
-xmax= 0.5
-xmin= -2.0
-ymax= 1.1j
-ymin= -1.1j
-xrange = xmax - xmin
-yrange = ymax - ymin
-area = xrange*(yrange*-1j).real
-
 def calculation(c,  maxiter = 1000, simulation=False, z = 0.0j):
 
     if not simulation:
@@ -33,8 +22,11 @@ def calculation(c,  maxiter = 1000, simulation=False, z = 0.0j):
 
 
 def mandelbrot(xmax=1.5,xmin=-2.5,ymax=1.5j,ymin=-1.5j, maxiter = 100, step=0.01):
-    nx = int((xmax - xmin) / step)
-    ny = int(((ymax - ymin) / step * -1j).real)
+    xrange = xmax - xmin
+    yrange = ymax - ymin
+    area = xrange * (yrange * -1j).real
+    nx = int((xrange) / step)
+    ny = int(((yrange) / step * -1j).real)
     m = np.zeros((ny, nx, 3))
 
     # # iy is rows, ix is cols
@@ -50,14 +42,6 @@ def mandelbrot(xmax=1.5,xmin=-2.5,ymax=1.5j,ymin=-1.5j, maxiter = 100, step=0.01
             m[iy, ix, 2], binary = calculation(c, maxiter)
             cumsum += binary
 
-    fig = plt.figure()
-    plt.imshow(m[:, :, 2], cmap='hot',
-               extent=[xmin, xmax, (ymin * -1j).real, (ymax * -1j).real])
-    plt.ylabel('Imaginary')
-    plt.xlabel('Real')
-    plt.title('Mandelbrot Plot')
-
-    print(f"Total pixels: {pixels}")
     est_area = cumsum/pixels * area
     print(f'Time elapsed for estimating the area with i = {maxiter} is {time.time() - start} seconds.')
     print(f"Estimated area = {est_area}")
@@ -65,6 +49,9 @@ def mandelbrot(xmax=1.5,xmin=-2.5,ymax=1.5j,ymin=-1.5j, maxiter = 100, step=0.01
 
 
 def random_sampling(xmax=1.5,xmin=-2.5,ymax=1.5j,ymin=-1.5j, maxiter=100, samples = 1000, step = 0.01):
+    xrange = xmax - xmin
+    yrange = ymax - ymin
+    area = xrange * (yrange * -1j).real
     start = time.time()
     in_mandelbrot = 0
     count = 0
@@ -72,7 +59,7 @@ def random_sampling(xmax=1.5,xmin=-2.5,ymax=1.5j,ymin=-1.5j, maxiter=100, sample
     while count < samples:
         # create random sample in complex plane
         y_sample = random.uniform(ymin, ymax)
-        nx = int((xmax - xmin) / step)
+        nx = int((xrange) / step)
         for ix in range(nx):
             x_val = xmin + ix * step
             sample = x_val + y_sample
@@ -82,16 +69,10 @@ def random_sampling(xmax=1.5,xmin=-2.5,ymax=1.5j,ymin=-1.5j, maxiter=100, sample
                 in_mandelbrot +=1
             count += 1
 
-    sample_area = in_mandelbrot/samples * (xrange*(yrange*-1j).real)
-    print(f'Time elapsed for sampling with s = {samples} , i = {maxiter} is {time.time() - start} seconds.')
-    print(f"Sample area = {sample_area}")
+    sample_area = in_mandelbrot/samples * area
+    # print(f'Time elapsed for sampling with s = {samples} , i = {maxiter} is {time.time() - start} seconds.')
+    # print(f"Sample area = {sample_area}")
     return sample_area
 
 
-samples = 10000
-simulations = 10
-p_value = 0.95
-
-estimation = mandelbrot(xmax, xmin, ymax, ymin, maxiter)
-r_sampling = random_sampling(xmax, xmin, ymax, ymin, maxiter, samples)
 
