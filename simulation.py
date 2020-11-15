@@ -25,22 +25,29 @@ xmax= 0.5
 xmin= -2.0
 ymax= 1.1j
 ymin= -1.1j
-
-samples = 10000
-simulations = 10
+samples = 1000
+simulations = 100
 p_value = 0.95
 maxiter = 200
 
 EX = mandelbrot(xmax, xmin, ymax, ymin, maxiter) # gives 1.5139
 
-outcomes = []
+# Simulations
+rs_samples = []
+lhs_samples = []
 for n in range(1, simulations+1):
     r_sampling = random_sampling(xmax, xmin, ymax, ymin, maxiter, samples)
-    print(f"Simulation {n} gives an area of {r_sampling}")
-    outcomes.append(r_sampling)
+    lhs_sim, x, y = LHS(xmax, xmin, ymax, ymin, maxiter, samples, plot=False)
+    # print(f"Simulation {n}, s={samples}, i={maxiter}, RS: {r_sampling}, LHS: {lhs_sim}")
+    rs_samples.append(r_sampling)
+    lhs_samples.append(lhs_sim)
+#
+var1 = variance(rs_samples, EX)
+var2 = variance(lhs_samples, EX)
 
-var1 = variance(outcomes, EX)
-print(f"Variance: {var1}")
+print(f"Simulations: {simulations}")
+print(f"Variance RS: {var1}, Variance LHS {var2}")
 print(conf_int(EX, var1, simulations, p=0.95))
+print(conf_int(EX, var2, simulations, p=0.95))
 
 
