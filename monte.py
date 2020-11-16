@@ -196,9 +196,12 @@ def orthogonal_sampling(xmax=1.5,xmin=-2.5,ymax=1.5j,ymin=-1.5j, maxiter=100, sa
     # define empty matrix to see where we need to sample
     # Matrix A is just to check whether orthogonal sampling works ok
     A = np.zeros(samples ** 2).reshape(samples, samples)
+
+    # make a list with the indices of blocks (with length of x, y = sqrt(samples) for x and y-axis
     zx = np.arange(0, samples+math.sqrt(samples), math.sqrt(samples))
     zy = np.arange(0, samples, math.sqrt(samples))
 
+    # define the intervals of indices (every sqrt(samples) there is an interval)
     intervals = []
     for i in range(1, len(zx)):
         intervals.append([int(zx[i-1]), int(zx[i])])
@@ -207,34 +210,49 @@ def orthogonal_sampling(xmax=1.5,xmin=-2.5,ymax=1.5j,ymin=-1.5j, maxiter=100, sa
     x_indices = [i for i in range(samples)]
     y_indices = [i for i in range(samples)]
 
-    # intervals of indices
-
+    # define lists of x- and y values for plotting purposes
     xlist = []
     ylist = []
 
     in_mandelbrot = 0
     start = time.time()
+
+    # loop through indices defined in intervals
     for i in intervals:
         for j in intervals:
+            # create lists from interval ranges
             x_temp = [x for x in range(j[0], j[1])]
             y_temp = [y for y in range(i[0], i[1])]
+
+            # define x and y coordinate of sample
             cx = 0
             cy = 0
+
+            # loop through available indices
             for k in x_indices:
+                # if an available index is in slice of indices
                 if k in x_temp:
+                    # set x coordinate to available index
                     cx = k
+                    # remove available index
                     x_indices.remove(k)
+                    # break out of the for-loop
                     break
+
+            # similar as above to determine y coordinate
             for k in y_indices:
                 if k in y_temp:
                     cy = k
                     y_indices.remove(k)
                     break
+                    # break out of for-loop and move to next block
+
             # add 1 to orthogonal matrix where sample is taken from
             A[cy][cx] = 1
 
-            # sample:
+            # from x-range, take strata with same x coordinate
             x_sample_range = x_strata[cx]
+            # from y-range, take strata with same y coordinate
             y_sample_range = y_strata[-(cy+1)]
 
             # take a random number between the min and max from given strata
