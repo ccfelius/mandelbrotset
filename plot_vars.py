@@ -3,12 +3,12 @@ import scipy.stats as st
 import math
 import numpy as np
 
-# calculate mean square error (MSE)
-def MSE(array, mean):
-    MSE = 0
+# calculate the variance
+def var(array, mean):
+    var1 = 0
     for i in array:
-        MSE += (i - mean)**2
-    return MSE / len(array)
+        var1 += (i - mean)**2
+    return var1 / len(array)
 
 # calculate confidence interval
 def conf_int(mean, var, n, p=0.95):
@@ -39,36 +39,39 @@ def conduct_experiment(it, samples):
         # print(f"Simulation {n} gives an area of {r_sampling}")
         outcomes.append(r_sampling)
 
-    MSE1 = MSE(outcomes, EX)
-    # print(f"Variance: {MSE1}")
-    # print(conf_int(EX, MSE1, simulations, p=0.95))
-    return MSE1
+    var1 = var(outcomes, EX)
+    # print(f"Variance: {var1}")
+    # print(conf_int(EX, var1, simulations, p=0.95))
+    return var1
 
-# check MSE change for iterations increase
+# check var change for iterations increase
 maxiters = np.array([100, 200, 300, 400, 500])
-maxiter_MSEs= []
+maxiter_vars= []
 for it in maxiters:
-    EX = mandelbrot(xmax, xmin, ymax, ymin, it) # gives 1.5139
-    maxiter_MSEs.append(conduct_experiment(it, samples=10000))
+    EX = mandelbrot(xmax, xmin, ymax, ymin, it) 
+    maxiter_vars.append(conduct_experiment(it, samples=10000))
 
-plt.plot(maxiters, maxiter_MSEs)
-plt.ylabel('MSE')
+plt.plot(maxiters, maxiter_vars)
+plt.ylabel('Variance')
 plt.xlabel('Number of iterations')
-plt.title('MSE over iterations Plot')
+# plt.title('Variance over iterations Plot')
 plt.show()
 plt.savefig('iterations.png')
+plt.close()
 
-# check MSE change for samples increase
-samples = np.array([100, 1000, 10000, 100000, 200000])
-samples_MSEs= []
-maxiter=100
+# check variance change for samples increase
+samples = np.array([100, 1000, 10000, 100000])
+samples_vars= []
+maxiter = 200
 for sample in samples:
-    EX = mandelbrot(xmax, xmin, ymax, ymin, sample) # gives 1.5139
-    samples_MSEs.append(conduct_experiment(maxiter, sample))
+    EX = mandelbrot(xmax, xmin, ymax, ymin, maxiter)
+    samples_vars.append(conduct_experiment(maxiter, sample))
 
-plt.plot(samples, samples_MSEs)
-plt.ylabel('MSE')
-plt.xlabel('Number of iterations')
-plt.title('MSE over iterations Plot')
-plt.show()
+plt.xscale('log')
+plt.plot(samples, samples_vars)
+plt.ylabel('Variance')
+plt.xlabel('Number of samples')
+#plt.title('Variance over samples Plot')
+#plt.show()
 plt.savefig('samples.png')
+
