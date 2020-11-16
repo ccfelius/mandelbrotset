@@ -37,7 +37,7 @@ rs_samples = []
 lhs_samples = []
 for n in range(1, simulations+1):
     r_sampling = random_sampling(xmax, xmin, ymax, ymin, maxiter, samples)
-    lhs_sim, x, y = LHS(xmax, xmin, ymax, ymin, maxiter, samples, plot=False)
+    lhs_sim = LHS(xmax, xmin, ymax, ymin, maxiter, samples, plot=False)
     # print(f"Simulation {n}, s={samples}, i={maxiter}, RS: {r_sampling}, LHS: {lhs_sim}")
     rs_samples.append(r_sampling)
     lhs_samples.append(lhs_sim)
