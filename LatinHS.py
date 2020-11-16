@@ -5,6 +5,7 @@ import time
 import random
 
 ### INTENDED FOR TESTING FUNCTION SEPERATELY ###
+### ALSO WITH VISUALISATION OF LATIN HYPERCUBE SAMPLES ###
 
 ## Simulations
 z = 0.0j

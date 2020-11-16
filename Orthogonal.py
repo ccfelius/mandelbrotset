@@ -6,6 +6,7 @@ import random
 import math
 
 ### INTENDED FOR TESTING FUNCTION SEPERATELY ###
+### ALSO WITH VISUALISATION OF ORTHOGONAL SAMPLES ###
 
 ## Simulations
 z = 0.0j
@@ -81,6 +82,7 @@ def orthogonal_sampling(xmax=1.5,xmin=-2.5,ymax=1.5j,ymin=-1.5j, maxiter=100, sa
                     cy = k
                     y_indices.remove(k)
                     break
+
             # add 1 to orthogonal matrix where sample is taken from
             A[cy][cx] = 1
 
