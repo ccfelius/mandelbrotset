@@ -198,6 +198,8 @@ def orthogonal_sampling(xmax=1.5,xmin=-2.5,ymax=1.5j,ymin=-1.5j, maxiter=100, sa
     # Keep track of available indices
     x_indices = [i for i in range(samples)]
     y_indices = [i for i in range(samples)]
+    random.shuffle(x_indices)
+    random.shuffle(y_indices)
 
     in_mandelbrot = 0
     # loop through indices defined in intervals
