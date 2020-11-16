@@ -67,19 +67,15 @@ def mandelbrot(xmax=1.5,xmin=-2.5,ymax=1.5j,ymin=-1.5j, maxiter = 100, step=0.01
 
 ## Random Sampling
 
-def random_sampling(xmax=1.5,xmin=-2.5,ymax=1.5j,ymin=-1.5j, maxiter=100, samples = 1000, step = 0.01):
+def random_sampling(xmax=1.5,xmin=-2.5,ymax=1.5j,ymin=-1.5j, maxiter=100, samples = 1000, step = 0.01, antithetic=False):
 
     # calculate x range, y range and area
     xrange = xmax - xmin
     yrange = ymax - ymin
     area = xrange * (yrange * -1j).real
 
-    # timer for estimation purposes
-    start = time.time()
-
     in_mandelbrot = 0
     count = 0
-
     # for all samples, sample a random y and x value
     while count < samples:
         #note that ymin and ymax are complex numbers
@@ -90,12 +86,26 @@ def random_sampling(xmax=1.5,xmin=-2.5,ymax=1.5j,ymin=-1.5j, maxiter=100, sample
         # check if in mandelbrotset
         if calculation(sample, maxiter, simulation = True):
             in_mandelbrot +=1
-        count += 1
 
-    # calculate the estimated sample area
-    sample_area = in_mandelbrot/samples * area
-    # print(f'Time elapsed for sampling with s = {samples} , i = {maxiter} is {time.time() - start} seconds.')
-    # print(f"Sample area = {sample_area}")
+        if not antithetic:
+            count += 1
+
+        # If antithetic variables are used
+        else:
+            # get invert of x and y samples
+            ay_sample = (ymin+ymax) - y_sample
+            ax_sample = (xmin+xmax) - x_sample
+            sample2 = ax_sample + ay_sample
+
+            # check if in mandelbrotset
+            if calculation(sample2, maxiter, simulation = True):
+                in_mandelbrot +=1
+
+            count += 2
+
+        # calculate the estimated sample area
+    sample_area = in_mandelbrot / samples * area
+
     return sample_area
 
 
@@ -128,10 +138,7 @@ def LHS(xmax=1.5,xmin=-2.5,ymax=1.5j,ymin=-1.5j, maxiter=100, samples = 1000, pl
     random.shuffle(x_strata)
     random.shuffle(y_strata)
 
-    xlist = []
-    ylist = []
     in_mandelbrot = 0
-    start = time.time()
     for s in range(samples):
 
         # take last strata in list
@@ -142,10 +149,6 @@ def LHS(xmax=1.5,xmin=-2.5,ymax=1.5j,ymin=-1.5j, maxiter=100, samples = 1000, pl
         xval = random.uniform(xintv[0], xintv[1])
         yval = random.uniform(yintv[0], yintv[1])
 
-        # save computed (random) x- and y values in list for plotting purposes
-        xlist.append(xval)
-        ylist.append((yval*-1j).real)
-
         # create sample in complex plane
         sample = xval + yval
 
@@ -153,22 +156,10 @@ def LHS(xmax=1.5,xmin=-2.5,ymax=1.5j,ymin=-1.5j, maxiter=100, samples = 1000, pl
         if calculation(sample, maxiter, simulation = True):
             in_mandelbrot +=1
 
-    ylist = [y.real for y in ylist]
     sample_area = in_mandelbrot/samples * area
-    # print(f'Time elapsed for LHS with s = {samples} , i = {maxiter} is {time.time() - start} seconds.')
-    # print(f"Sample area = {sample_area}")
-
-    if plot == True:
-        plt.plot(xlist, ylist, 'o', markersize=1)
-        plt.ylabel('Imaginary')
-        plt.xlabel('Real')
-        plt.title(f'Latin Hypercube Samples (s={samples})')
-        plt.show()
-
-        # save figure
-        # plt.savefig('LHS_samples.png')
 
     return sample_area
+
 
 def orthogonal_sampling(xmax=1.5,xmin=-2.5,ymax=1.5j,ymin=-1.5j, maxiter=100, samples = 1000, plot = False):
 
@@ -189,13 +180,11 @@ def orthogonal_sampling(xmax=1.5,xmin=-2.5,ymax=1.5j,ymin=-1.5j, maxiter=100, sa
     # Define strata at x and y-axis
     x_strata = []
     y_strata = []
+
+    # append x- and y intervals to strata
     for i in range(1, len(x)):
         x_strata.append([x[i - 1], x[i]])
         y_strata.append([y[i - 1], y[i]])
-
-    # define empty matrix to see where we need to sample
-    # Matrix A is just to check whether orthogonal sampling works ok
-    A = np.zeros(samples ** 2).reshape(samples, samples)
 
     # make a list with the indices of blocks (with length of x, y = sqrt(samples) for x and y-axis
     zx = np.arange(0, samples+math.sqrt(samples), math.sqrt(samples))
@@ -210,13 +199,7 @@ def orthogonal_sampling(xmax=1.5,xmin=-2.5,ymax=1.5j,ymin=-1.5j, maxiter=100, sa
     x_indices = [i for i in range(samples)]
     y_indices = [i for i in range(samples)]
 
-    # define lists of x- and y values for plotting purposes
-    xlist = []
-    ylist = []
-
     in_mandelbrot = 0
-    start = time.time()
-
     # loop through indices defined in intervals
     for i in intervals:
         for j in intervals:
@@ -247,9 +230,6 @@ def orthogonal_sampling(xmax=1.5,xmin=-2.5,ymax=1.5j,ymin=-1.5j, maxiter=100, sa
                     break
                     # break out of for-loop and move to next block
 
-            # add 1 to orthogonal matrix where sample is taken from
-            A[cy][cx] = 1
-
             # from x-range, take strata with same x coordinate
             x_sample_range = x_strata[cx]
             # from y-range, take strata with same y coordinate
@@ -259,36 +239,13 @@ def orthogonal_sampling(xmax=1.5,xmin=-2.5,ymax=1.5j,ymin=-1.5j, maxiter=100, sa
             xval = random.uniform(x_sample_range[0], x_sample_range[1])
             yval = random.uniform(y_sample_range[0], y_sample_range[1])
 
-            # save computed (random) x- and y values in list for plotting purposes
-            xlist.append(xval)
-            ylist.append((yval * -1j).real)
-
             # create sample in complex plane
             sample = xval + yval
-
-            # print(x_sample_range, y_sample_range)
-            # if you uncomment the statements you print the blocks
-            # print(A[(i[0]):(i[1]), (j[0]):(j[1])])
 
             if calculation(sample, maxiter, simulation=True):
                 in_mandelbrot += 1
 
-    # Uncommit if you want to see the orthogonal matrix
-    # print(A)
-    ylist = [y.real for y in ylist]
     sample_area = in_mandelbrot / samples * area
-    # print(f'Time elapsed for Orthogonal Sampling with s = {samples} , i = {maxiter} is {time.time() - start} seconds.')
-    # print(f"Sample area = {sample_area}")
-
-    if plot == True:
-        plt.plot(xlist, ylist, 'o', markersize=1)
-        plt.ylabel('Imaginary')
-        plt.xlabel('Real')
-        plt.title(f'Orthogonal Sampling (s={samples})')
-        plt.show()
-
-        # save figure
-        plt.savefig('Orthogonal.png')
 
     return sample_area
 
