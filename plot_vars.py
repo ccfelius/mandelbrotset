@@ -3,13 +3,14 @@ import scipy.stats as st
 import math
 import numpy as np
 
+# calculate mean square error (MSE)
 def MSE(array, mean):
     MSE = 0
     for i in array:
         MSE += (i - mean)**2
     return MSE / len(array)
 
-
+# calculate confidence interval
 def conf_int(mean, var, n, p=0.95):
     pnew = (p+1)/2
     zval = st.norm.ppf(pnew)
@@ -19,8 +20,7 @@ def conf_int(mean, var, n, p=0.95):
     plus_lambda = mean + alambda
     return f"Confidence interval: [{min_lambda} < X < {plus_lambda}] with p = {p}"
 
-
-## Simulations
+# Simulations initial values
 z = 0.0j
 step = 0.01
 xmax= 0.5
@@ -28,9 +28,10 @@ xmin= -2.0
 ymax= 1.1j
 ymin= -1.1j
 
-simulations = 20
+simulations = 50
 p_value = 0.95
 
+# run simulation
 def conduct_experiment(it, samples):
     outcomes = []
     for n in range(1, simulations+1):
@@ -39,12 +40,12 @@ def conduct_experiment(it, samples):
         outcomes.append(r_sampling)
 
     MSE1 = MSE(outcomes, EX)
-    print(f"Variance: {MSE1}")
-    print(conf_int(EX, MSE1, simulations, p=0.95))
+    # print(f"Variance: {MSE1}")
+    # print(conf_int(EX, MSE1, simulations, p=0.95))
     return MSE1
 
 # check MSE change for iterations increase
-maxiters = np.array([100, 200, 300])
+maxiters = np.array([100, 200, 300, 400, 500])
 maxiter_MSEs= []
 for it in maxiters:
     EX = mandelbrot(xmax, xmin, ymax, ymin, it) # gives 1.5139
@@ -58,12 +59,12 @@ plt.show()
 plt.savefig('iterations.png')
 
 # check MSE change for samples increase
-samples = np.array([100, 1000, 10000, 100000])
+samples = np.array([100, 1000, 10000, 100000, 200000])
 samples_MSEs= []
-maxiter= 100
+maxiter=100
 for sample in samples:
     EX = mandelbrot(xmax, xmin, ymax, ymin, sample) # gives 1.5139
-    samples_MSEs.append(conduct_experiment(maxiter, samples))
+    samples_MSEs.append(conduct_experiment(maxiter, sample))
 
 plt.plot(samples, samples_MSEs)
 plt.ylabel('MSE')
@@ -71,4 +72,3 @@ plt.xlabel('Number of iterations')
 plt.title('MSE over iterations Plot')
 plt.show()
 plt.savefig('samples.png')
-
