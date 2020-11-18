@@ -1,4 +1,5 @@
-# mandelbrotset
+# Mandelbrotset
+Assignment 1: Investigate the area of a Mandelbrotset for the course Stochastic Simulation at University of Amsterdam.
 
 ### Required Packages:
 numpy<br>
@@ -8,10 +9,11 @@ time<br>
 math<br>
 scipy<br>
 
-### Instructions:
+You can easily install these packages by using 'pip install name_package' in your anaconda terminal.
 
+### Instructions:
 Clone the files and make sure you have all required packages installed. Run simulations.py if you want to see the outcomes of simulations for Random Sampling, LHS and Orthogonal sampling.
-<b>Note:</b> It may occur that you have to delete the line 'from mandelbrotset.monte import *' and change it to 'from monte import *'. However, some IDE'S require 'from monte import *' (e.g. visual studio) and other 'from mandelbrotset.monte import *' (e.g. pycharm). In any case, make sure that all files are stated in the same folder. This is important as you will need to use functions stated in monte.py.
+<br><br><b>Note:</b> It may occur that you have to delete the line 'from mandelbrotset.monte import *' and change it to 'from monte import *'. However, some IDE'S require 'from monte import *' (e.g. visual studio) and other 'from mandelbrotset.monte import *' (e.g. pycharm). In any case, make sure that all files are stated in the same folder. This is important as you will need to use functions stated in monte.py.
 
 ### Explanations per file
 - monte.py <br>
