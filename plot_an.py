@@ -54,7 +54,7 @@ def random_sampling(xmax=1.5,xmin=-2.5,ymax=1.5j,ymin=-1.5j, maxiter=100, sample
     return sample_area
 
 
-# run simulation and with antithetic and return outcomes
+# run simulation and with antithetic or without 
 def conduct_experiment(it, samples, simulations, antithetic=False):
     outcomes = []
     for n in range(1, simulations+1):
@@ -70,11 +70,10 @@ xmin= -2.0
 ymax= 1.1j
 ymin= -1.1j
 
-simulations = 1900
-maxiter = 200
-samples = np.arange(1, 51, 1).tolist()
+simulations = 100
+maxiter = 1900
+samples = np.arange(10, 301, 10).tolist()
 samples_var = []
-
 
 
 # run simulation various sample values calculate variance and
@@ -84,16 +83,6 @@ for sample in samples:
     outcomes = (conduct_experiment(maxiter, sample, simulations, antithetic=True))
     var1 = np.var(outcomes)
     samples_var.append(var1)
-
-
-
-# def conduct_experiment_normal(it, samples, simulations):
-#     outcomes = []
-#     for n in range(1, simulations+1):
-#         r_sampling = random_sampling(xmax, xmin, ymax, ymin, maxiter, samples)
-#         outcomes.append(r_sampling)
-#     return outcomes
-
 
 samples_var_normal = []
 # run simulation various sample values calculate variance and
