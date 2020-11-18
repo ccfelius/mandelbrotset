@@ -81,7 +81,7 @@ def LHS(xmax=1.5,xmin=-2.5,ymax=1.5j,ymin=-1.5j, maxiter=100, samples = 1000, pl
         plt.show()
 
         # save figure
-        # plt.savefig('images/LHS/Mandelbrot.png')
+        # plt.savefig('lHS.png')
 
     return sample_area, xlist, ylist
 

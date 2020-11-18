@@ -34,6 +34,7 @@ def mandelbrot(xmax=1.5,xmin=-2.5,ymax=1.5j,ymin=-1.5j, maxiter = 100, step=0.01
     xrange = xmax - xmin
     yrange = ymax - ymin
     area = xrange * (yrange * -1j).real
+    # print(area)
 
     # determine grid due to stepsize
     nx = int((xrange) / step)

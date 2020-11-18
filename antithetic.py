@@ -61,8 +61,8 @@ ymin= -1.1j
 
 # Orthogonal sampling works optimal if root of amount
 # of samples is int
-samples = 1024
-simulations = 50
+samples = 3600
+simulations = 100
 p_value = 0.95
 maxiter = 200
 
@@ -89,7 +89,17 @@ for n in range(1, simulations+1):
 print(f"\nEstimated Mandelbrot Area {EX}")
 print(f"Simulations: {simulations}, Samples: {samples}\nVariance RS: {np.var(rs_samples)}, antithetic: {np.var(rs_samples_a)}\nVariance LHS: {np.var(lhs_samples)}\nVariance Orthogonal Sampling: {np.var(orth_samples)}\n ")
 print(f"Estimated Mandelbrot Area E[X]: {EX:.4f}")
-print(conf_int(EX, np.var(rs_samples), simulations, p=0.95))
-print(conf_int(EX, np.var(rs_samples_a), simulations, p=0.95))
-print(conf_int(EX, np.var(lhs_samples), simulations, p=0.95))
-print(conf_int(EX, np.var(orth_samples), simulations, p=0.95))
+print(conf_int(np.mean(rs_samples), np.var(rs_samples), simulations, p=0.95))
+print(conf_int(np.mean(rs_samples_a), np.var(rs_samples_a), simulations, p=0.95))
+print(conf_int(np.mean(lhs_samples), np.var(lhs_samples), simulations, p=0.95))
+print(conf_int(np.mean(orth_samples), np.var(orth_samples), simulations, p=0.95))
+print(np.mean(rs_samples))
+print(np.mean(rs_samples_a))
+print(np.mean(lhs_samples))
+print(np.mean(orth_samples))
+
+print(np.std(rs_samples))
+print(np.std(rs_samples_a))
+print(np.std(lhs_samples))
+print(np.std(orth_samples))
+

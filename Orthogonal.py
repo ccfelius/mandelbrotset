@@ -18,8 +18,8 @@ ymin= -1.1j
 maxiter = 100
 
 # samples has to be a integer when sqrt
-samples = 81
-simulations = 10
+samples = 4
+simulations = 1
 
 
 def orthogonal_sampling(xmax=1.5,xmin=-2.5,ymax=1.5j,ymin=-1.5j, maxiter=100, samples = 1000, plot = False):
@@ -58,7 +58,8 @@ def orthogonal_sampling(xmax=1.5,xmin=-2.5,ymax=1.5j,ymin=-1.5j, maxiter=100, sa
     # Keep track of available indices
     x_indices = [i for i in range(samples)]
     y_indices = [i for i in range(samples)]
-
+    random.shuffle(x_indices)
+    random.shuffle(y_indices)
     # intervals of indices
 
     xlist = []
@@ -103,20 +104,21 @@ def orthogonal_sampling(xmax=1.5,xmin=-2.5,ymax=1.5j,ymin=-1.5j, maxiter=100, sa
 
             # print(x_sample_range, y_sample_range)
             # if you uncomment the statements you print the blocks
-            # print(A[(i[0]):(i[1]), (j[0]):(j[1])])
+            print(A[(i[0]):(i[1]), (j[0]):(j[1])])
+            print()
 
             if calculation(sample, maxiter, simulation=True):
                 in_mandelbrot += 1
 
     # Uncommit if you want to see the orthogonal matrix
-    # print(A)
+    print(A)
     ylist = [y.real for y in ylist]
     sample_area = in_mandelbrot / samples * area
     print(f'Time elapsed for Orthogonal Sampling with s = {samples} , i = {maxiter} is {time.time() - start} seconds.')
     print(f"Sample area = {sample_area}")
 
     if plot == True:
-        plt.plot(xlist, ylist, 'o', markersize=1)
+        plt.plot(xlist, ylist, 'o', markersize=6)
         plt.ylabel('Imaginary')
         plt.xlabel('Real')
         plt.title(f'Orthogonal Sampling (s={samples})')
@@ -126,6 +128,5 @@ def orthogonal_sampling(xmax=1.5,xmin=-2.5,ymax=1.5j,ymin=-1.5j, maxiter=100, sa
         plt.savefig('Orthogonal.png')
 
     return sample_area
-
 
 orthogonal_sampling(xmax, xmin, ymax, ymin, maxiter, samples, plot = True)

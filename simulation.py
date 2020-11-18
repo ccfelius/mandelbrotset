@@ -2,12 +2,6 @@ from mandelbrotset.monte import *
 import scipy.stats as st
 import math
 
-def variance(array, mean):
-    var = 0
-    for i in array:
-        var += (i - mean)**2
-    return var / len(array)
-
 def conf_int(mean, var, n, p=0.95):
     pnew = (p+1)/2
     zval = st.norm.ppf(pnew)
@@ -15,7 +9,7 @@ def conf_int(mean, var, n, p=0.95):
     alambda = (zval*sigma)/math.sqrt(n)
     min_lambda = mean - alambda
     plus_lambda = mean + alambda
-    return f"Confidence interval: [{min_lambda} < X < {plus_lambda}] with p = {p}"
+    return f"Confidence interval: [{min_lambda:.4f} < X < {plus_lambda:.4f}] with p = {p}"
 
 
 ## Simulations
@@ -26,16 +20,16 @@ xmin= -2.0
 ymax= 1.1j
 ymin= -1.1j
 
-# amount of samples has to be a int if square root!
-# in orther for orthogonal sampling to work
-samples = 144
-simulations = 20
+# Orthogonal sampling works optimal if root of amount of samples is int
+samples = 3600
+simulations = 100
 p_value = 0.95
-maxiter = 200
+maxiter = 1900
 
-EX = mandelbrot(xmax, xmin, ymax, ymin, maxiter) # gives 1.5139
+# calculate area of mandelbrot brute-force
+EX = mandelbrot(xmax, xmin, ymax, ymin, maxiter)
 
-# Simulations
+# # Simulations
 rs_samples = []
 lhs_samples = []
 orth_samples = []
@@ -47,17 +41,17 @@ for n in range(1, simulations+1):
     rs_samples.append(r_sampling)
     lhs_samples.append(lhs_sim)
     orth_samples.append(orth_sim)
+# #
 #
-var1 = variance(rs_samples, EX)
-var2 = variance(lhs_samples, EX)
-var3 = variance(orth_samples, EX)
-
 print(f"\nEstimated Mandelbrot Area {EX}")
-print(f"Simulations: {simulations}, Samples: {samples}\nVariance RS: {var1}\nVariance LHS: {var2}\nVariance Orthogonal Sampling: {var3}\n ")
-print(f"Estimated Mandelbrot Area E[X]: {EX}")
-print(conf_int(EX, var1, simulations, p=0.95))
-print(conf_int(EX, var2, simulations, p=0.95))
-print(conf_int(EX, var3, simulations, p=0.95))
-
+print(f"Simulations: {simulations}, Samples: {samples}\nVariance RS: {np.var(rs_samples)}\nVariance LHS: {np.var(lhs_samples)}\nVariance Orthogonal Sampling: {np.var(orth_samples)}\n ")
+print(f"Simulations: {simulations}, Samples: {samples}\nSTD RS: {np.std(rs_samples)}\nSTD LHS: {np.std(lhs_samples)}\nSTD Orthogonal Sampling: {np.std(orth_samples)}\n ")
+print(f"Estimated Mandelbrot Area E[X]: {EX:.4f}")
+print(conf_int(np.mean(rs_samples), np.var(rs_samples), simulations, p=0.95))
+print(conf_int(np.mean(lhs_samples), np.var(lhs_samples), simulations, p=0.95))
+print(conf_int(np.mean(orth_samples), np.var(orth_samples), simulations, p=0.95))
+print(np.mean(rs_samples))
+print(np.mean(lhs_samples))
+print(np.mean(orth_samples))
 
 

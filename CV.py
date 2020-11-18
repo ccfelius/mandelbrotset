@@ -24,7 +24,7 @@ ymin= -1.1j
 # amount of samples has to be a int if square root!
 # in orther for orthogonal sampling to work
 samples = 1024
-simulations = 40
+simulations = 50
 p_value = 0.95
 maxiter = 200
 
@@ -43,15 +43,16 @@ for n in range(1, simulations+1):
     lhs_samples.append(lhs_sim)
     orth_samples.append(orth_sim)
 
+print()
 print("NORMAL ESTIMATES: ")
 
 
 print(f"\nEstimated Mandelbrot Area {EX}")
 print(f"Simulations: {simulations}, Samples: {samples}\nVariance RS: {np.var(rs_samples)}\nVariance LHS: {np.var(lhs_samples)}\nVariance Orthogonal Sampling: {np.var(orth_samples)}\n ")
 print(f"Estimated Mandelbrot Area E[X]: {EX:.4f}")
-print(conf_int(EX, np.var(rs_samples), simulations, p=0.95))
-print(conf_int(EX, np.var(lhs_samples), simulations, p=0.95))
-print(conf_int(EX, np.var(orth_samples), simulations, p=0.95))
+print(conf_int(np.mean(rs_samples), np.var(rs_samples), simulations, p=0.95))
+print(conf_int(np.mean(lhs_samples), np.var(lhs_samples), simulations, p=0.95))
+print(conf_int(np.mean(orth_samples), np.var(orth_samples), simulations, p=0.95))
 
 print()
 print("CONTROL VARIATES ESTIMATES: ")
@@ -71,6 +72,6 @@ cv_orth = [a_i - b_i + EX for a_i, b_i in zip(cv_orth_x, cv_orth_y)]
 print(f"\nEstimated Mandelbrot Area {EX}")
 print(f"Simulations: {simulations}, Samples: {samples}\nVariance RS: {np.var(cv_rs)}\nVariance LHS: {np.var(cv_lhs)}\nVariance Orthogonal Sampling: {np.var(cv_orth)}\n ")
 print(f"Estimated Mandelbrot Area E[X]: {EX:.4f}")
-print(conf_int(EX, np.var(cv_rs), simulations, p=0.95))
-print(conf_int(EX, np.var(cv_lhs), simulations, p=0.95))
-print(conf_int(EX, np.var(cv_orth), simulations, p=0.95))
+print(conf_int(np.mean(cv_rs), np.var(cv_rs), simulations, p=0.95))
+print(conf_int(np.mean(cv_lhs), np.var(cv_lhs), simulations, p=0.95))
+print(conf_int(np.mean(cv_orth), np.var(cv_orth), simulations, p=0.95))
