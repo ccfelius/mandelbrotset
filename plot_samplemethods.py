@@ -55,12 +55,13 @@ simulations = 20
 maxiters =  np.arange(100, 5001, 100).tolist()
 errors = []
 samples = 5000
+print("Running code for the max amount of iterations, this may take some time, Max=")
 max_i = np.mean(conduct_experiment(5000, samples, simulations))
 print(max_i)
 
 # iterate of number of iterations, simulate for each 
 for it in maxiters:
-    print(it)
+    print("Number of iterations running:", it)
     errors.append((abs(np.mean(conduct_experiment(it, samples, simulations)) - max_i)))
 
 # plot figure
@@ -83,7 +84,7 @@ maxiter = 200
 
 # iterate of number of samples, simulate for each 
 for sample in samples:
-    print(sample)
+    print("Number of samples running: ", sample)
     outcomes= (conduct_experiment(maxiter, sample, simulations))
     
     mean = np.mean(outcomes)
@@ -115,7 +116,7 @@ simulations = np.arange(100, 3001, 100).tolist()
 
 # iterate of number of simulations, simulate for each 
 for i in simulations:
-    print(i)
+    print("Number of simulations running: ", i)
     outcomes= (conduct_experiment(maxiter, samples, i))
     mean = np.mean(outcomes)
     simulations_mean.append(mean)
