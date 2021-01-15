@@ -1,6 +1,8 @@
 # Mandelbrotset
-Assignment 1: Investigate the area of a Mandelbrotset for the course Stochastic Simulation at University of Amsterdam. <br>
-By: Amber den Hollander (10910441) and Lotte Felius (12368032)
+Investigate the area of a Mandelbrotset for the course Stochastic Simulation at University of Amsterdam. <br>
+
+### License:
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ### Required Packages:
 numpy<br>
